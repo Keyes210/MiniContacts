@@ -1,13 +1,13 @@
 package com.example.alexlowe.minicontacts;
 
 import android.database.Cursor;
+import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,14 +30,15 @@ public class MainActivity extends AppCompatActivity {
                             ContactsContract.Contacts.DISPLAY_NAME,
                             ContactsContract.Contacts.PHOTO_URI};
 
+
                     //create the loader
                     CursorLoader cursorLoader = new CursorLoader(
                             MainActivity.this, //context
                             ContactsContract.Contacts.CONTENT_URI, //uri
                             projectionFields, //projection fields
-                            null, //selection criteria
+                            ContactsContract.Contacts.HAS_PHONE_NUMBER + " = '1'", //selection criteria
                             null, //selection args
-                            null //sort order
+                            ContactsContract.Contacts.DISPLAY_NAME + " ASC" //sort order
                             );
 
                 return cursorLoader;
