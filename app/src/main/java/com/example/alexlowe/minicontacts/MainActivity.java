@@ -1,6 +1,7 @@
 package com.example.alexlowe.minicontacts;
 
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.LoaderManager;
@@ -25,16 +26,19 @@ public class MainActivity extends AppCompatActivity {
                 // Create and return the actual cursor loader for the contacts data
                 @Override
                 public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+                    Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+
                     // Define the columns to retrieve
                     String[] projectionFields = new String[]{ContactsContract.Contacts._ID,
                             ContactsContract.Contacts.DISPLAY_NAME,
-                            ContactsContract.Contacts.PHOTO_URI};
+                            ContactsContract.CommonDataKinds.Phone.NUMBER};
 
 
                     //create the loader
                     CursorLoader cursorLoader = new CursorLoader(
                             MainActivity.this, //context
-                            ContactsContract.Contacts.CONTENT_URI, //uri
+                            uri, //uri
                             projectionFields, //projection fields
                             ContactsContract.Contacts.HAS_PHONE_NUMBER + " = '1'", //selection criteria
                             null, //selection args
@@ -78,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupCursorAdapter() {
         String[] uiBindFrom = {ContactsContract.Contacts.DISPLAY_NAME,
-                ContactsContract.Contacts.PHOTO_URI};
+                ContactsContract.CommonDataKinds.Phone.NUMBER};
         int[] uiBindTo = {R.id.tvName, R.id.ivImage};
 
         mCursorAdapter = new SimpleCursorAdapter(this, R.layout.item_contact, null, uiBindFrom,
