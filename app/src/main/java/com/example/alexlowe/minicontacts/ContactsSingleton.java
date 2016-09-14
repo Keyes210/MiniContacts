@@ -18,7 +18,6 @@ public class ContactsSingleton {
         if (instance == null) instance = new ContactsSingleton();
         return instance;
     }
-    //ContactsSingleton.getInstance().masterList.get(position);
 }
 
 

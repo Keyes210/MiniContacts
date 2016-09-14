@@ -13,7 +13,7 @@ public class Contact {
     public Contact(String name, String number, String type, String photoURI){
         this.name = name;
         numbers = new HashMap<>();
-        addNumbers(number, type);
+        addNumber(number, type);
         this.photoURI = photoURI;
     }
 
@@ -29,7 +29,7 @@ public class Contact {
         return numbers;
     }
 
-    public void addNumbers(String number, String type) {
+    public void addNumber(String number, String type) {
         this.numbers.put(number, type);
     }
 
