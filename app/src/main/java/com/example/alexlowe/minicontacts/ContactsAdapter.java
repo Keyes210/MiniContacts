@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -122,13 +123,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     }
 
     private void launchDialog(Contact contact) {
-        ArrayList<String> numbersArrayList = new ArrayList<>();
-        for (Map.Entry<String, String> entry : contact.getNumbers().entrySet()){
-            numbersArrayList.add(entry.getKey());
-        }
-
-        final CharSequence[] numbersCharSeq = numbersArrayList
-                .toArray(new CharSequence[numbersArrayList.size()]);
+        final CharSequence[] numbersCharSeq = getCharSequences(contact);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Choose a number:");
@@ -140,6 +135,17 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         });
         builder.setNegativeButton("Cancel", null);
         builder.show();
+    }
+
+    @NonNull
+    private CharSequence[] getCharSequences(Contact contact) {
+        ArrayList<String> numbersArrayList = new ArrayList<>();
+        for (Map.Entry<String, String> entry : contact.getNumbers().entrySet()){
+            numbersArrayList.add(entry.getKey());
+        }
+
+        return numbersArrayList
+                .toArray(new CharSequence[numbersArrayList.size()]);
     }
 
 
