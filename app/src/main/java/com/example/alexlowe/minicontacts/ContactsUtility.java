@@ -11,15 +11,9 @@ import java.util.ArrayList;
  * Created by alexlowe on 9/14/16.
  */
 public class ContactsUtility {
-    private Context context;
-    private ArrayList<Contact> masterList;
+    private static ArrayList<Contact> masterList = ContactsSingleton.getInstance().masterList;
 
-    public ContactsUtility(Context context){
-        this.context = context;
-        masterList = ContactsSingleton.getInstance().masterList;
-    }
-
-    public ArrayList<Contact> getContactList(){
+    public static ArrayList<Contact> getContactList(Context context){
         Uri contactsUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
 
         String[] PROJECTION = new String[]{
@@ -56,14 +50,14 @@ public class ContactsUtility {
             if(masterList.isEmpty()){
                 masterList.add(contact);
             }else{
-                addAdditionalNumberToContact(contact, number, numberType);
+                addContact(contact, number, numberType);
             }
         }
 
         return masterList;
     }
 
-    private void addAdditionalNumberToContact(Contact contact, String number, String numberType) {
+    private static void addContact(Contact contact, String number, String numberType) {
         Contact lastContact = masterList.get(masterList.size()-1);
 
         if(lastContact.getName().equals(contact.getName())){
