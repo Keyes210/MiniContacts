@@ -17,6 +17,12 @@ public class Contact {
         this.photoURI = photoURI;
     }
 
+    public Contact(String name, HashMap<String,String> numbers, String photoURI){
+        this.name = name;
+        this.numbers = numbers;
+        this.photoURI = photoURI;
+    }
+
     public String getName() {
         return name;
     }
