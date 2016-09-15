@@ -1,6 +1,11 @@
 package com.example.alexlowe.minicontacts;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +43,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Contact contact = contactList.get(position);
+        final Contact contact = contactList.get(position);
 
         TextView tvName = holder.tvName;
         tvName.setText(contact.getName());
@@ -50,7 +55,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         for (Map.Entry<String, String> entry : contactNumbers.entrySet())
         {
             phoneListString.append(newline)
-                    .append(entry.getValue())
+                    .append((entry.getValue().equals("2")) ? "M" : "H")
                     .append(": ")
                     .append(entry.getKey());
             newline = "\n";
@@ -58,6 +63,19 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
         TextView tvNumbers = holder.tvNumbers;
         tvNumbers.setText(phoneListString);
+
+        CardView cardView = holder.cardView;
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(contact.getNumbers().size() > 1){
+                    launchDialog(contact);
+                }else{
+                    startDialer(contact.getOnlyNumber());
+                }
+
+            }
+        });
     }
 
     @Override
@@ -69,7 +87,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         if(text.isEmpty()){
             contactList.clear();
             contactList.addAll(contactListCopy);
-            //Log.i("rimjob", String.format("orig : %d copy : %d", contactList.size(), contactListCopy.size()));
         } else{
             ArrayList<Contact> result = new ArrayList<>();
             text = text.toLowerCase();
@@ -87,13 +104,42 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public TextView tvName;
         public TextView tvNumbers;
+        public CardView cardView;
 
         public ViewHolder(View itemView){
             super(itemView);
 
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             tvNumbers = (TextView) itemView.findViewById(R.id.tvNumbers);
+            cardView = (CardView) itemView.findViewById(R.id.card);
         }
+    }
+
+    private void startDialer(String current_number){
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + current_number));
+        context.startActivity(intent);
+    }
+
+    private void launchDialog(Contact contact) {
+        ArrayList<String> numbersArrayList = new ArrayList<>();
+        for (Map.Entry<String, String> entry : contact.getNumbers().entrySet()){
+            numbersArrayList.add(entry.getKey());
+        }
+
+        final CharSequence[] numbersCharSeq = numbersArrayList
+                .toArray(new CharSequence[numbersArrayList.size()]);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Choose a number:");
+        builder.setItems(numbersCharSeq, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startDialer(numbersCharSeq[which].toString());
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
     }
 
 

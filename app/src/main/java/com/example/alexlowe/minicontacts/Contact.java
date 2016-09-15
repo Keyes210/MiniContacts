@@ -1,6 +1,8 @@
 package com.example.alexlowe.minicontacts;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by alexlowe on 9/13/16.
@@ -45,5 +47,13 @@ public class Contact {
 
     public void setPhotoURI(String photoURI) {
         this.photoURI = photoURI;
+    }
+
+    public String getOnlyNumber(){
+        ArrayList<String> arr = new ArrayList<>();
+        for(Map.Entry<String, String> entry : numbers.entrySet()){
+            arr.add(entry.getKey());
+        }
+        return arr.get(0);
     }
 }
