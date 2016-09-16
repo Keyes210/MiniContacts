@@ -49,20 +49,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         TextView tvName = holder.tvName;
         tvName.setText(contact.getName());
 
-        HashMap<String, String> contactNumbers = contact.getNumbers();
-
-        StringBuilder phoneListString = new StringBuilder();
-        String newline = "";
-        for (Map.Entry<String, String> entry : contactNumbers.entrySet())
-        {
-            phoneListString.append(newline)
-                    .append((entry.getValue().equals("2")) ? "M" : "H")
-                    .append(": ")
-                    .append(phoneDisplay(entry.getKey()));
-            newline = "\n";
-        }
-
         TextView tvNumbers = holder.tvNumbers;
+        String phoneListString = getPhoneListString(contact);
         tvNumbers.setText(phoneListString);
 
         CardView cardView = holder.cardView;
@@ -79,6 +67,23 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         });
     }
 
+    private String getPhoneListString(Contact contact) {
+        HashMap<String, String> contactNumbers = contact.getNumbers();
+
+        StringBuilder phoneListString = new StringBuilder();
+        String newline = "";
+        for (Map.Entry<String, String> entry : contactNumbers.entrySet())
+        {
+            phoneListString.append(newline)
+                    .append((entry.getValue().equals("2")) ? "M" : "H")
+                    .append(": ")
+                    .append(phoneDisplay(entry.getKey()));
+            newline = "\n";
+        }
+
+        return phoneListString.toString();
+    }
+
     private String phoneDisplay(String number) {
         if(number.length() == 10){
             String first = number.substring(0,3);
@@ -87,6 +92,38 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             return String.format("(%s) %s-%s", first, second, third);
         }
         return number;
+    }
+
+    private void launchDialog(Contact contact) {
+        final CharSequence[] numbersCharSeq = getCharSequences(contact);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Choose a number:");
+        builder.setItems(numbersCharSeq, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startDialer(numbersCharSeq[which].toString());
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
+
+    @NonNull
+    private CharSequence[] getCharSequences(Contact contact) {
+        ArrayList<String> numbersArrayList = new ArrayList<>();
+        for (Map.Entry<String, String> entry : contact.getNumbers().entrySet()){
+            numbersArrayList.add(entry.getKey());
+        }
+
+        return numbersArrayList
+                .toArray(new CharSequence[numbersArrayList.size()]);
+    }
+
+    private void startDialer(String current_number){
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + current_number));
+        context.startActivity(intent);
     }
 
     @Override
@@ -125,38 +162,5 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             cardView = (CardView) itemView.findViewById(R.id.card);
         }
     }
-
-    private void startDialer(String current_number){
-        Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:" + current_number));
-        context.startActivity(intent);
-    }
-
-    private void launchDialog(Contact contact) {
-        final CharSequence[] numbersCharSeq = getCharSequences(contact);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Choose a number:");
-        builder.setItems(numbersCharSeq, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                startDialer(numbersCharSeq[which].toString());
-            }
-        });
-        builder.setNegativeButton("Cancel", null);
-        builder.show();
-    }
-
-    @NonNull
-    private CharSequence[] getCharSequences(Contact contact) {
-        ArrayList<String> numbersArrayList = new ArrayList<>();
-        for (Map.Entry<String, String> entry : contact.getNumbers().entrySet()){
-            numbersArrayList.add(entry.getKey());
-        }
-
-        return numbersArrayList
-                .toArray(new CharSequence[numbersArrayList.size()]);
-    }
-
 
 }

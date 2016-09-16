@@ -10,19 +10,11 @@ import java.util.Map;
 public class Contact {
     private String name;
     private HashMap<String,String> numbers;
-    private String photoURI;
 
-    public Contact(String name, String number, String type, String photoURI){
+    public Contact(String name, String number, String type){
         this.name = name;
         numbers = new HashMap<>();
         addNumber(number, type);
-        this.photoURI = photoURI;
-    }
-
-    public Contact(String name, HashMap<String,String> numbers, String photoURI){
-        this.name = name;
-        this.numbers = numbers;
-        this.photoURI = photoURI;
     }
 
     public String getName() {
@@ -39,14 +31,6 @@ public class Contact {
 
     public void addNumber(String number, String type) {
         this.numbers.put(number, type);
-    }
-
-    public String getPhotoURI() {
-        return photoURI;
-    }
-
-    public void setPhotoURI(String photoURI) {
-        this.photoURI = photoURI;
     }
 
     public String getOnlyNumber(){

@@ -9,7 +9,7 @@ public class ContactsSingleton {
     public ArrayList<Contact> masterList;
 
     private ContactsSingleton() {
-        masterList = new ArrayList<Contact>();
+        masterList = new ArrayList<>();
     }
 
     private static ContactsSingleton instance;

@@ -35,23 +35,24 @@ public class ContactsUtility {
                 SORT_ORDER
         );
 
-        while (contactsCursor.moveToNext()) {
-            String name = contactsCursor.getString(contactsCursor.
-                    getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-            String number = contactsCursor.getString(contactsCursor.
-                    getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            String numberType = contactsCursor.getString(contactsCursor.
-                    getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
-            String photoUri = contactsCursor.getString(contactsCursor.
-                    getColumnIndex(ContactsContract.Contacts.PHOTO_URI));
+        if (contactsCursor != null) {
+            while (contactsCursor.moveToNext()) {
+                String name = contactsCursor.getString(contactsCursor.
+                        getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                String number = contactsCursor.getString(contactsCursor.
+                        getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                String numberType = contactsCursor.getString(contactsCursor.
+                        getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
 
-            Contact contact = new Contact(name, rawNumber(number), numberType, photoUri);
+                Contact contact = new Contact(name, rawNumber(number), numberType);
 
-            if (masterList.isEmpty()) {
-                masterList.add(contact);
-            } else {
-                addContact(contact, rawNumber(number), numberType);
+                if (masterList.isEmpty()) {
+                    masterList.add(contact);
+                } else {
+                    addContact(contact, rawNumber(number), numberType);
+                }
             }
+            contactsCursor.close();
         }
 
         return masterList;

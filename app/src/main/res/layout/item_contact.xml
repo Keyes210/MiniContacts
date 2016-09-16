@@ -18,21 +18,21 @@
         <TextView
             android:id="@+id/tvName"
             android:layout_weight="6"
-            android:text="Alex"
             android:gravity="center_vertical"
             android:layout_width="0dp"
-            android:textSize="18dp"
+            android:textSize="18sp"
+            android:paddingStart="28dp"
             android:paddingLeft="28dp"
             android:layout_height="match_parent"
             android:textStyle="bold"
+            android:paddingEnd="20dp"
             android:paddingRight="20dp"/>
 
         <TextView
             android:id="@+id/tvNumbers"
             android:layout_weight="4"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:gravity="center_vertical"
-            android:text="617-216-7124"
             android:layout_width="0dp"
             android:layout_height="match_parent"/>
 
