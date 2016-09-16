@@ -58,7 +58,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             phoneListString.append(newline)
                     .append((entry.getValue().equals("2")) ? "M" : "H")
                     .append(": ")
-                    .append(entry.getKey());
+                    .append(phoneDisplay(entry.getKey()));
             newline = "\n";
         }
 
@@ -77,6 +77,16 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
             }
         });
+    }
+
+    private String phoneDisplay(String number) {
+        if(number.length() == 10){
+            String first = number.substring(0,3);
+            String second = number.substring(3,6);
+            String third = number.substring(6,10);
+            return String.format("(%s) %s-%s", first, second, third);
+        }
+        return number;
     }
 
     @Override

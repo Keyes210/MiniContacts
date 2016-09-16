@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class ContactsUtility {
     private static ArrayList<Contact> masterList = ContactsSingleton.getInstance().masterList;
 
-    public static ArrayList<Contact> getContactList(Context context){
+    public static ArrayList<Contact> getContactList(Context context) {
         Uri contactsUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
 
         String[] PROJECTION = new String[]{
@@ -35,7 +35,7 @@ public class ContactsUtility {
                 SORT_ORDER
         );
 
-        while (contactsCursor.moveToNext()){
+        while (contactsCursor.moveToNext()) {
             String name = contactsCursor.getString(contactsCursor.
                     getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
             String number = contactsCursor.getString(contactsCursor.
@@ -45,11 +45,11 @@ public class ContactsUtility {
             String photoUri = contactsCursor.getString(contactsCursor.
                     getColumnIndex(ContactsContract.Contacts.PHOTO_URI));
 
-            Contact contact = new Contact(name, number, numberType, photoUri);
+            Contact contact = new Contact(name, rawNumber(number), numberType, photoUri);
 
-            if(masterList.isEmpty()){
+            if (masterList.isEmpty()) {
                 masterList.add(contact);
-            }else{
+            } else {
                 addContact(contact, number, numberType);
             }
         }
@@ -58,12 +58,20 @@ public class ContactsUtility {
     }
 
     private static void addContact(Contact contact, String number, String numberType) {
-        Contact lastContact = masterList.get(masterList.size()-1);
+        Contact lastContact = masterList.get(masterList.size() - 1);
 
-        if(lastContact.getName().equals(contact.getName())){
+        if (lastContact.getName().equals(contact.getName())) {
             lastContact.addNumber(number, numberType);
-        }else{
+        } else {
             masterList.add(contact);
         }
     }
+
+    private static String rawNumber(String input) {
+        if (input.startsWith("1")) {
+            input = input.substring(1);
+        }
+        return input.replaceAll("[^0-9]+", "");
+    }
+
 }
