@@ -25,7 +25,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     private ArrayList<Contact> contactListCopy;
     private Context context;
 
+    //adapter is logic heavy
     public ContactsAdapter(Context context, ArrayList<Contact> contacts){
+        //pointing to singleton
         this.contactList = contacts;
         this.contactListCopy = new ArrayList<>();
         for(Contact contact : contacts){
@@ -45,7 +47,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Contact contact = contactList.get(position);
-
+            //bind method
         TextView tvName = holder.tvName;
         tvName.setText(contact.getName());
 
@@ -54,6 +56,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         tvNumbers.setText(phoneListString);
 
         CardView cardView = holder.cardView;
+        //interface
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,10 +65,18 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
                 }else{
                     startDialer(contact.getOnlyNumber());
                 }
-
+//avoid new onclicklistener
             }
         });
     }
+
+    // one presenter per screen
+    //background contact retrieval
+
+    //look into android builtin methods
+    //good place to test
+
+    //if class doesn't deal with memeber variables, try making static
 
     private String getPhoneListString(Contact contact) {
         HashMap<String, String> contactNumbers = contact.getNumbers();

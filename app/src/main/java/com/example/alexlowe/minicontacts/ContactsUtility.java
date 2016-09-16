@@ -11,8 +11,10 @@ import java.util.ArrayList;
  * Created by alexlowe on 9/14/16.
  */
 public class ContactsUtility {
+    //use local variables
     private static ArrayList<Contact> masterList = ContactsSingleton.getInstance().masterList;
 
+    //List vs ArrList, generic interface, works for views if just changing visibility
     public static ArrayList<Contact> getContactList(Context context) {
         Uri contactsUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
 
@@ -24,7 +26,8 @@ public class ContactsUtility {
                 ContactsContract.CommonDataKinds.Phone.TYPE
         };
 
-        String SELECTION = ContactsContract.Contacts.HAS_PHONE_NUMBER + " = '1'";
+        //can be classlevel static finals
+        String SELECTION = ContactsContract.Contacts.HAS_PHONE_NUMBER + "= ?";// then args
         String SORT_ORDER = ContactsContract.Contacts.DISPLAY_NAME + " ASC";
 
         Cursor contactsCursor = context.getContentResolver().query(
