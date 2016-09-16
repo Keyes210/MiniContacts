@@ -50,7 +50,7 @@ public class ContactsUtility {
             if (masterList.isEmpty()) {
                 masterList.add(contact);
             } else {
-                addContact(contact, number, numberType);
+                addContact(contact, rawNumber(number), numberType);
             }
         }
 
