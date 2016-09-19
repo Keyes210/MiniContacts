@@ -9,8 +9,6 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity{
     ContactsAdapter contactsAdapter;
 
@@ -19,10 +17,9 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ArrayList<Contact> contactList = ContactsUtility.getContactList(this);
-
         RecyclerView rvContacts = (RecyclerView) findViewById(R.id.contacts_recyclerview);
-        contactsAdapter = new ContactsAdapter(this, contactList);
+        contactsAdapter = new ContactsAdapter(this);
+        ContactsUtility.getContacts(contactsAdapter, this);
         rvContacts.setAdapter(contactsAdapter);
         rvContacts.setLayoutManager(new LinearLayoutManager(this));
     }

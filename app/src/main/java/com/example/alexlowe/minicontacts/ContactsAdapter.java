@@ -15,25 +15,28 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by alexlowe on 9/14/16.
  */
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder>{
-    private ArrayList<Contact> contactList;
-    private ArrayList<Contact> contactListCopy;
+    private List<Contact> contactList;
+    private List<Contact> contactListCopy;
     private Context context;
 
     //adapter is logic heavy
-    public ContactsAdapter(Context context, ArrayList<Contact> contacts){
-        //pointing to singleton
+    public ContactsAdapter(Context context){
+        this.context = context;
+    }
+
+    public void setUpContacts(List<Contact> contacts){
         this.contactList = contacts;
         this.contactListCopy = new ArrayList<>();
         for(Contact contact : contacts){
             contactListCopy.add(contact);
         }
-        this.context = context;
     }
 
     @Override
