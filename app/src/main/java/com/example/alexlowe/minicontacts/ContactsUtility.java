@@ -6,35 +6,35 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by alexlowe on 9/14/16.
  */
 public class ContactsUtility {
-    //use local variables
-    private static ArrayList<Contact> masterList = ContactsSingleton.getInstance().masterList;
+    public static final String[] PROJECTION = new String[]{
+            ContactsContract.Contacts._ID,
+            ContactsContract.Contacts.DISPLAY_NAME,
+            ContactsContract.CommonDataKinds.Phone.NUMBER,
+            ContactsContract.Contacts.PHOTO_URI,
+            ContactsContract.CommonDataKinds.Phone.TYPE
+    };
 
-    //List vs ArrList, generic interface, works for views if just changing visibility
-    public static ArrayList<Contact> getContactList(Context context) {
+    public static final String SELECTION = ContactsContract.Contacts.HAS_PHONE_NUMBER + "= ?";
+    public static final String[] SELECTION_ARGS = {"1"};
+    public static final String SORT_ORDER = ContactsContract.Contacts.DISPLAY_NAME + " ASC";
+
+    public static List<Contact> getContactList(Context context) {
+        List<Contact> masterList = new ArrayList<>();
+
+        //should be backgrounded
         Uri contactsUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-
-        String[] PROJECTION = new String[]{
-                ContactsContract.Contacts._ID,
-                ContactsContract.Contacts.DISPLAY_NAME,
-                ContactsContract.CommonDataKinds.Phone.NUMBER,
-                ContactsContract.Contacts.PHOTO_URI,
-                ContactsContract.CommonDataKinds.Phone.TYPE
-        };
-
-        //can be classlevel static finals
-        String SELECTION = ContactsContract.Contacts.HAS_PHONE_NUMBER + "= ?";// then args
-        String SORT_ORDER = ContactsContract.Contacts.DISPLAY_NAME + " ASC";
 
         Cursor contactsCursor = context.getContentResolver().query(
                 contactsUri,
                 PROJECTION,
                 SELECTION,
-                null,
+                SELECTION_ARGS,
                 SORT_ORDER
         );
 
@@ -52,7 +52,7 @@ public class ContactsUtility {
                 if (masterList.isEmpty()) {
                     masterList.add(contact);
                 } else {
-                    addContact(contact, rawNumber(number), numberType);
+                    addContact(masterList, contact, rawNumber(number), numberType);
                 }
             }
             contactsCursor.close();
@@ -61,13 +61,14 @@ public class ContactsUtility {
         return masterList;
     }
 
-    private static void addContact(Contact contact, String number, String numberType) {
-        Contact lastContact = masterList.get(masterList.size() - 1);
+    private static void addContact(List<Contact> contactList, Contact contact,
+                                   String number, String numberType) {
+        Contact lastContact = contactList.get(contactList.size() - 1);
 
         if (lastContact.getName().equals(contact.getName())) {
             lastContact.addNumber(number, numberType);
         } else {
-            masterList.add(contact);
+            contactList.add(contact);
         }
     }
 
