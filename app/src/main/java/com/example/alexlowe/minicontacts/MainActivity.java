@@ -9,7 +9,7 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     ContactsAdapter contactsAdapter;
 
     @Override
@@ -19,7 +19,6 @@ public class MainActivity extends AppCompatActivity{
 
         RecyclerView rvContacts = (RecyclerView) findViewById(R.id.contacts_recyclerview);
         contactsAdapter = new ContactsAdapter(this);
-        ContactsUtility.getContacts(contactsAdapter, this);
         rvContacts.setAdapter(contactsAdapter);
         rvContacts.setLayoutManager(new LinearLayoutManager(this));
     }

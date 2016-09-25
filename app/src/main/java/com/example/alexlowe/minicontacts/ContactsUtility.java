@@ -20,7 +20,7 @@ import rx.schedulers.Schedulers;
  */
 public class ContactsUtility {
 
-    public static void getContacts(final ContactsAdapter contactsAdapter, final Context context){
+    public static List<Contact> getContacts(final Context context){
         Observable.fromCallable(new Callable<Cursor>() {
 
             @Override
@@ -36,7 +36,7 @@ public class ContactsUtility {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<List<Contact>>() {
                     @Override
-                    public void call(List<Contact> contacts) {
+                    public List<Contact> call(List<Contact> contacts) {
                         contactsAdapter.setUpContacts(contacts);
                     }
                 });
